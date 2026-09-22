@@ -2,9 +2,11 @@ package models;
 
 public class Currency {
     private Long id;
-    private final String code;
-    private final String fullName;
-    private final String sign;
+    private String code;
+    private String fullName;
+    private String sign;
+
+    public Currency(){}
 
     public Currency(String code, String fullName, String sign){
         this.code = code;
@@ -30,5 +32,16 @@ public class Currency {
 
     public void setId(Long id) {
         this.id = id;
+    }
+    public void setCode(String code){
+        this.code = code;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setSign(String sign) {
+        this.sign = sign;
     }
 }

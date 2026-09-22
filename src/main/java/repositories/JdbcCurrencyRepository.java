@@ -34,20 +34,41 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
         return list;
     }
 
+    @Override
+    public Optional<Currency> findByCode(String code) throws SQLException {
+        String query = "SELECT id, code, fullName, sign" +
+                " FROM Currencies" +
+                " WHERE code = ?";
+
+        Currency currency = new Currency();
+
+        try(Connection connection = DatabaseManager.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1,code);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            long id = resultSet.getInt(1);
+            String codeResult = resultSet.getString(2);
+            String fullName = resultSet.getString(3);
+            String sign = resultSet.getString(4);
+
+            currency.setId(id);
+            currency.setCode(codeResult);
+            currency.setFullName(fullName);
+            currency.setSign(sign);
+        }
+        return Optional.ofNullable(currency);
+    }
 
     @Override
-    public Currency findByCode(String code) throws SQLException {
-        return null;
+    public Optional<Currency> findById(int id) throws SQLException {
+
+        return Optional.empty();
     }
 
     @Override
     public void create(Currency entity) throws SQLException {
 
-    }
-
-    @Override
-    public Optional<Currency> findById(int id) throws SQLException {
-        return Optional.empty();
     }
 
 

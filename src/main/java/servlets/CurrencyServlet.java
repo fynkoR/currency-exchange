@@ -8,28 +8,25 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
 import repositories.JdbcCurrencyRepository;
-import utils.DatabaseManager;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
-import java.util.List;
+import java.sql.SQLException;
+import java.util.Optional;
 
-@WebServlet("/hello")
-public class testServlet extends HttpServlet {
+@WebServlet("/currency/*")
+public class CurrencyServlet extends HttpServlet {
     ObjectMapper objectMapper = new ObjectMapper();
     JdbcCurrencyRepository jdbcCurrencyRepository = new JdbcCurrencyRepository();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter printWriter = resp.getWriter();
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            List<Currency> list = jdbcCurrencyRepository.findAll();
-            String json = objectMapper.writeValueAsString(list);
-            printWriter.println(json);
+        try{
+            String s = "1";
+            Optional<Currency> currency = jdbcCurrencyRepository.findByCode(s)
+                    .orElseThrow("");
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
     }
 }
