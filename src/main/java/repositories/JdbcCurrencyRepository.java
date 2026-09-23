@@ -47,6 +47,10 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
             preparedStatement.setString(1,code);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            if(!resultSet.next()){
+                return Optional.empty();
+            }
+
             long id = resultSet.getInt(1);
             String codeResult = resultSet.getString(2);
             String fullName = resultSet.getString(3);
@@ -57,17 +61,68 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
             currency.setFullName(fullName);
             currency.setSign(sign);
         }
-        return Optional.ofNullable(currency);
+        return Optional.of(currency);
     }
 
     @Override
-    public Optional<Currency> findById(int id) throws SQLException {
+    public Long save(Currency entity) throws SQLException {
+        String query = "INSERT INTO Currencies (code,fullName,sign) VALUES (?,?,?)";
 
-        return Optional.empty();
+        long id = 0L;
+
+        try(Connection connection = DatabaseManager.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+            preparedStatement.setString(1, entity.getCode());
+            preparedStatement.setString(2, entity.getFullName());
+            preparedStatement.setString(3, entity.getSign());
+
+            int affectedRow = preparedStatement.executeUpdate();
+
+            if(affectedRow == 0){
+                throw new RuntimeException("No affected row !");
+            }
+
+            ResultSet resultSet = preparedStatement.getGeneratedKeys();
+            if(resultSet.next()){
+                id = resultSet.getLong(1);
+            }
+        }
+        return id;
     }
 
     @Override
-    public void create(Currency entity) throws SQLException {
+    public Optional<Currency> findById(long id) throws SQLException {
+        String query = "SELECT id,code,fullName,sign" +
+                " FROM Currencies" +
+                " WHERE id = ?";
+
+        Currency currency = new Currency();
+        try(Connection connection = DatabaseManager.getConnection()){
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(!resultSet.next()){
+                return Optional.empty();
+            }
+
+            long idResult = resultSet.getLong(1);
+            String code = resultSet.getString(2);
+            String fullName = resultSet.getString(3);
+            String sign = resultSet.getString(4);
+
+            currency.setId(idResult);
+            currency.setCode(code);
+            currency.setFullName(fullName);
+            currency.setSign(sign);
+
+        }
+        return Optional.of(currency);
+    }
+
+    @Override
+    public void update(Currency entity) throws SQLException {
 
     }
 
@@ -75,10 +130,5 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
     @Override
     public void delete(Currency entity) throws SQLException {
 
-    }
-
-    @Override
-    public Integer save(Currency entity) throws SQLException {
-        return 0;
     }
 }
