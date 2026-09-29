@@ -3,6 +3,9 @@ package utils;
 import exceptions.ValidationException;
 import jakarta.servlet.http.HttpServletRequest;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+
 public class Validator {
     public static String getRequiredParameter(HttpServletRequest req, String parameter){
         String result = req.getParameter(parameter);
@@ -11,6 +14,15 @@ public class Validator {
         }
         return result;
     }
+
+    public static String getRequiredParameterForPatch(HttpServletRequest req, String parameter) throws IOException {
+        String rateString = req.getReader().readLine();
+        if(rateString == null || !rateString.contains(parameter + "=")){
+            throw new ValidationException("Form field '" + parameter + "' missing !");
+        }
+        return rateString.replace(parameter + "=", "");
+    }
+
     public static String getRequiredPathSegment(HttpServletRequest req){
         String path = req.getPathInfo();
         if(path == null || path.isEmpty()){
@@ -22,4 +34,32 @@ public class Validator {
         }
         return result;
     }
+    public static String[] getRequiredPathTwoSegment(HttpServletRequest req){
+        String path = req.getPathInfo();
+        if(path == null || path.isEmpty()){
+            throw new ValidationException("Path segment is missing");
+        }
+        String pathWithoutSlash = path.substring(1);
+        if(pathWithoutSlash.length() != 6){
+            throw new ValidationException("The currency code format must be as follows: AAABBB");
+        }
+        if(isOnlyLetters(pathWithoutSlash)){
+            throw new ValidationException("The currency code must be letters");
+        }
+        String firstCode = path.substring(1, 4);
+        String secondCode = path.substring(4, 7);
+
+        return new String[]{firstCode, secondCode};
+    }
+
+    public static boolean isOnlyLetters(String path){
+        for(int i = 0; i < path.length(); i++){
+            if(!Character.isLetter(i)){
+                return false;
+            }
+        }
+        return true;
+    }
+
+
 }

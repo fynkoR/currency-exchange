@@ -27,7 +27,7 @@ public class CurrenciesServlet extends HttpServlet {
             List<Currency> list = jdbcCurrencyRepository.findAll();
             resp.setContentType("application/json");
             resp.setCharacterEncoding("UTF-8");
-            resp.setStatus(200);
+            resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getWriter(), list);
 
         } catch (SQLException e) {

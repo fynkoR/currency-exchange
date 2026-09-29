@@ -14,7 +14,6 @@ import utils.Validator;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @WebServlet("/currency/*")
 public class CurrencyServlet extends HttpServlet {
@@ -23,7 +22,6 @@ public class CurrencyServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         try{
             String code = Validator.getRequiredPathSegment(req);
 

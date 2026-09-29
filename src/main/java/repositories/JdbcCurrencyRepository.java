@@ -20,14 +20,9 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
         try(Connection connection = DatabaseManager.getConnection()){
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            long id = 1L;
 
             while(resultSet.next()){
-                String code = resultSet.getString(2);
-                String fullName = resultSet.getString(3);
-                String sign = resultSet.getString(4);
-                Currency currency = new Currency(code, fullName, sign);
-                currency.setId(id++);
+                Currency currency = toEntity(resultSet);
                 list.add(currency);
             }
         }
@@ -51,15 +46,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
                 return Optional.empty();
             }
 
-            long id = resultSet.getInt(1);
-            String codeResult = resultSet.getString(2);
-            String fullName = resultSet.getString(3);
-            String sign = resultSet.getString(4);
-
-            currency.setId(id);
-            currency.setCode(codeResult);
-            currency.setFullName(fullName);
-            currency.setSign(sign);
+            currency = toEntity(resultSet);
         }
         return Optional.of(currency);
     }
@@ -107,15 +94,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
                 return Optional.empty();
             }
 
-            long idResult = resultSet.getLong(1);
-            String code = resultSet.getString(2);
-            String fullName = resultSet.getString(3);
-            String sign = resultSet.getString(4);
-
-            currency.setId(idResult);
-            currency.setCode(code);
-            currency.setFullName(fullName);
-            currency.setSign(sign);
+            currency = toEntity(resultSet);
 
         }
         return Optional.of(currency);
@@ -130,5 +109,20 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
     @Override
     public void delete(Currency entity) throws SQLException {
 
+    }
+
+    public static Currency toEntity(ResultSet resultSet) throws SQLException {
+        Currency currency = new Currency();
+        long id = resultSet.getLong(1);
+        String code = resultSet.getString(2);
+        String fullName = resultSet.getString(3);
+        String sign = resultSet.getString(4);
+
+        currency.setId(id);
+        currency.setCode(code);
+        currency.setFullName(fullName);
+        currency.setSign(sign);
+
+        return currency;
     }
 }
