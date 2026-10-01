@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
+import models.ErrorResponse;
 import repositories.JdbcCurrencyRepository;
 import utils.Validator;
 
@@ -33,11 +34,17 @@ public class CurrencyServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), currency);
 
         } catch (SQLException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
         } catch (NoSuchElementException e){
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Currency not found");
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_NOT_FOUND, "Currency not found"));
         } catch (ValidationException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
         }
     }
 }

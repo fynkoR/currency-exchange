@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import models.ErrorResponse;
 import models.ExchangeRate;
 import repositories.JdbcExchangeRateRepository;
 import utils.Validator;
@@ -45,11 +46,17 @@ public class ExchangeRateServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), exchangeRate);
 
         } catch (ValidationException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
         } catch (SQLException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
         } catch (NoSuchElementException e){
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Exchange rate for the pair not found");
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_NOT_FOUND, "Exchange rate for the pair not found"));
         }
     }
 
@@ -71,11 +78,16 @@ public class ExchangeRateServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), exchangeRate);
 
         } catch (ValidationException | NumberFormatException e){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
         } catch (SQLException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
         } catch (NoSuchElementException e){
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Exchange rate for the pair not found");
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_NOT_FOUND, "Exchange rate for the pair not found"));
         }
     }
 }

@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
+import models.ErrorResponse;
 import repositories.JdbcCurrencyRepository;
 import repositories.JdbcExchangeRateRepository;
 import services.ExchangeService;
@@ -54,13 +55,22 @@ public class ExchangeServlet extends HttpServlet {
             objectMapper.writeValue(resp.getWriter(), exchangeRateDTO);
 
         } catch (ValidationException | NumberFormatException e) {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
         } catch (NoSuchElementException e){
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Currency not found");
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_NOT_FOUND, "Currency not found"));
         } catch (SQLException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
+
         } catch (ExchangeRateNotFoundException e){
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_NOT_FOUND, e.getMessage()));
         }
     }
 }

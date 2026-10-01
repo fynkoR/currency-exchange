@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import models.Currency;
+import models.ErrorResponse;
 import models.ExchangeRate;
 import org.sqlite.SQLiteErrorCode;
 import repositories.JdbcCurrencyRepository;
@@ -25,17 +26,20 @@ public class ExchangeRatesServlet extends HttpServlet {
     ObjectMapper objectMapper = new ObjectMapper();
     JdbcExchangeRateRepository jdbcExchangeRateRepository = new JdbcExchangeRateRepository();
     JdbcCurrencyRepository jdbcCurrencyRepository = new JdbcCurrencyRepository();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("application/json");
         resp.setCharacterEncoding("UTF-8");
-        try{
+        try {
             List<ExchangeRate> list = jdbcExchangeRateRepository.findAll();
             resp.setStatus(HttpServletResponse.SC_OK);
-            objectMapper.writeValue(resp.getWriter(),list);
+            objectMapper.writeValue(resp.getWriter(), list);
 
         } catch (SQLException e) {
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable");
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
         }
     }
 
@@ -44,7 +48,7 @@ public class ExchangeRatesServlet extends HttpServlet {
         resp.setContentType("application/x-www-form-urlencoded");
         resp.setCharacterEncoding("UTF-8");
 
-        try{
+        try {
             String baseCurrencyCode = Validator.getRequiredParameter(req, "baseCurrencyCode");
             String targetCurrencyCode = Validator.getRequiredParameter(req, "targetCurrencyCode");
             String rateString = Validator.getRequiredParameter(req, "rate");
@@ -63,15 +67,24 @@ public class ExchangeRatesServlet extends HttpServlet {
             resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getWriter(), exchangeRate);
 
-        } catch (ValidationException | NumberFormatException e){
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-        } catch (NoSuchElementException e){
-            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "One (or both) of the currencies in the currency pair does not exist.");
+        } catch (ValidationException | NumberFormatException e) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
+        } catch (NoSuchElementException e) {
+            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_NOT_FOUND,
+                            "One (or both) of the currencies in the currency pair does not exist."));
         } catch (SQLException e) {
-            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT.code){
-                resp.sendError(HttpServletResponse.SC_CONFLICT, "A currency pair with this code already exists.");
+            if (e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT.code) {
+                resp.setStatus(HttpServletResponse.SC_CONFLICT);
+                objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                        (HttpServletResponse.SC_CONFLICT, "A currency pair with this code already exists."));
             }
-            resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable: " + e.getErrorCode());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable:"));
         }
 
 
