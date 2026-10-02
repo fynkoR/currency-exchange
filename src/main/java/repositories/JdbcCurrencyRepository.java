@@ -18,8 +18,8 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
         List<Currency> list = new ArrayList<>();
 
         try(Connection connection = DatabaseManager.getConnection()){
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(query);
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery(query);
 
             while(resultSet.next()){
                 Currency currency = toEntity(resultSet);

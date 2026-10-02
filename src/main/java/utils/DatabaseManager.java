@@ -41,7 +41,9 @@ public class DatabaseManager {
         }
 
         HikariConfig config = new HikariConfig();
-        String url = "jdbc:sqlite:" + path;
+        String resourcePath = DatabaseManager.class.getClassLoader()
+                .getResource(path).getPath();
+        String url = "jdbc:sqlite:" + resourcePath;
         config.setJdbcUrl(url);
         dataSource = new HikariDataSource(config);
     }
