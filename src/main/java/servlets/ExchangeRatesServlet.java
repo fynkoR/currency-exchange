@@ -29,8 +29,6 @@ public class ExchangeRatesServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
         try {
             List<ExchangeRate> list = jdbcExchangeRateRepository.findAll();
             resp.setStatus(HttpServletResponse.SC_OK);
@@ -45,9 +43,6 @@ public class ExchangeRatesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/x-www-form-urlencoded");
-        resp.setCharacterEncoding("UTF-8");
-
         try {
             String baseCurrencyCode = Validator.getRequiredParameter(req, "baseCurrencyCode");
             String targetCurrencyCode = Validator.getRequiredParameter(req, "targetCurrencyCode");

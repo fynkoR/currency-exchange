@@ -28,8 +28,6 @@ public class CurrencyServlet extends HttpServlet {
 
             Currency currency = jdbcCurrencyRepository.findByCode(code)
                     .orElseThrow(NoSuchElementException::new);
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
             resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getWriter(), currency);
 

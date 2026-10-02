@@ -35,8 +35,6 @@ public class ExchangeRateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/json");
-        resp.setCharacterEncoding("UTF-8");
 
         try {
             String[] codes = Validator.getRequiredPathTwoSegment(req);
@@ -61,8 +59,6 @@ public class ExchangeRateServlet extends HttpServlet {
     }
 
     protected void processPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/x-www-form-urlencoded");
-        resp.setCharacterEncoding("UTF-8");
         try{
             String[] codes = Validator.getRequiredPathTwoSegment(req);
             ExchangeRate exchangeRate = jdbcExchangeRateRepository.findByTwoCodes(codes[0], codes[1])

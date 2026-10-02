@@ -19,7 +19,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
 
         try(Connection connection = DatabaseManager.getConnection()){
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            ResultSet resultSet = preparedStatement.executeQuery(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             while(resultSet.next()){
                 Currency currency = toEntity(resultSet);

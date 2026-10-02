@@ -26,8 +26,6 @@ public class CurrenciesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             List<Currency> list = jdbcCurrencyRepository.findAll();
-            resp.setContentType("application/json");
-            resp.setCharacterEncoding("UTF-8");
             resp.setStatus(HttpServletResponse.SC_OK);
             objectMapper.writeValue(resp.getWriter(), list);
 
@@ -40,8 +38,6 @@ public class CurrenciesServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("application/x-www-form-urlencoded");
-        resp.setCharacterEncoding("UTF-8");
         try {
             String code = Validator.getRequiredParameter(req, "code");
             String fullName = Validator.getRequiredParameter(req, "fullName");
