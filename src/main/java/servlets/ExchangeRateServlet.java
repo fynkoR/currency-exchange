@@ -64,7 +64,9 @@ public class ExchangeRateServlet extends HttpServlet {
             ExchangeRate exchangeRate = jdbcExchangeRateRepository.findByTwoCodes(codes[0], codes[1])
                     .orElseThrow(NoSuchElementException::new);
 
-            BigDecimal rate = new BigDecimal(Validator.getRequiredParameterForPatch(req, "rate"));
+            String rateString = Validator.getRequiredParameterForPatch(req, "rate");
+
+            BigDecimal rate = Validator.getPositiveDecimal(rateString, "rate");
 
             exchangeRate.setRate(rate);
 

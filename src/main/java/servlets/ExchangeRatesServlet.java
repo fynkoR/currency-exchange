@@ -48,7 +48,7 @@ public class ExchangeRatesServlet extends HttpServlet {
             String targetCurrencyCode = Validator.getRequiredParameter(req, "targetCurrencyCode");
             String rateString = Validator.getRequiredParameter(req, "rate");
 
-            BigDecimal rate = new BigDecimal(rateString);
+            BigDecimal rate = Validator.getPositiveDecimal(rateString, "rate");
 
             Currency baseCurrency = jdbcCurrencyRepository.findByCode(baseCurrencyCode)
                     .orElseThrow(NoSuchElementException::new);
@@ -77,9 +77,11 @@ public class ExchangeRatesServlet extends HttpServlet {
                 objectMapper.writeValue(resp.getWriter(), new ErrorResponse
                         (HttpServletResponse.SC_CONFLICT, "A currency pair with this code already exists."));
             }
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
-                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable:"));
+            else{
+                resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                objectMapper.writeValue(resp.getWriter(), new ErrorResponse
+                        (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable:"));
+            }
         }
 
 

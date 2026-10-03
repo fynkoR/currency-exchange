@@ -35,7 +35,7 @@ public class ExchangeServlet extends HttpServlet {
             String to = Validator.getRequiredParameter(req, "to");
             String amountParameter = Validator.getRequiredParameter(req, "amount");
 
-            BigDecimal amount = new BigDecimal(amountParameter);
+            BigDecimal amount = Validator.getPositiveDecimal(amountParameter, "amount");
 
             Currency currencyFrom = jdbcCurrencyRepository.findByCode(from)
                     .orElseThrow(NoSuchElementException::new);

@@ -43,7 +43,7 @@ public class Validator {
         if(pathWithoutSlash.length() != 6){
             throw new ValidationException("The currency code format must be as follows: AAABBB");
         }
-        if(isOnlyLetters(pathWithoutSlash)){
+        if(!isOnlyLetters(pathWithoutSlash)){
             throw new ValidationException("The currency code must be letters");
         }
         String firstCode = path.substring(1, 4);
@@ -54,11 +54,19 @@ public class Validator {
 
     public static boolean isOnlyLetters(String path){
         for(int i = 0; i < path.length(); i++){
-            if(!Character.isLetter(i)){
+            if(!Character.isLetter(path.charAt(i))){
                 return false;
             }
         }
         return true;
+    }
+
+    public static BigDecimal getPositiveDecimal(String rateString, String fieldName){
+        BigDecimal rate = new BigDecimal(rateString);
+        if(rate.compareTo(BigDecimal.ZERO) <= 0){
+            throw new ValidationException(fieldName + " is negative or zero");
+        }
+        return rate;
     }
 
 
