@@ -48,6 +48,8 @@ public class ExchangeRatesServlet extends HttpServlet {
             String targetCurrencyCode = Validator.getRequiredParameter(req, "targetCurrencyCode");
             String rateString = Validator.getRequiredParameter(req, "rate");
 
+            Validator.validateCurrenciesNotEqual(baseCurrencyCode, targetCurrencyCode);
+
             BigDecimal rate = Validator.getPositiveDecimal(rateString, "rate");
 
             Currency baseCurrency = jdbcCurrencyRepository.findByCode(baseCurrencyCode)

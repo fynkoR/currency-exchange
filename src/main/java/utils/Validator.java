@@ -69,5 +69,9 @@ public class Validator {
         return rate;
     }
 
-
+    public static void validateCurrenciesNotEqual(String baseCurrency, String targetCurrency){
+        if(baseCurrency.equals(targetCurrency)){
+            throw new ValidationException("Base currency and target currency equals");
+        }
+    }
 }
