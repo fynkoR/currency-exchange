@@ -61,7 +61,7 @@ public class ExchangeRatesServlet extends HttpServlet {
             ExchangeRate exchangeRate = new ExchangeRate(baseCurrency, targetCurrency, rate);
             long id = jdbcExchangeRateRepository.save(exchangeRate);
             exchangeRate.setId(id);
-            resp.setStatus(HttpServletResponse.SC_OK);
+            resp.setStatus(HttpServletResponse.SC_CREATED);
             objectMapper.writeValue(resp.getWriter(), exchangeRate);
 
         } catch (ValidationException | NumberFormatException e) {

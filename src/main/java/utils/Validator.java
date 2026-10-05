@@ -9,8 +9,11 @@ import java.math.BigDecimal;
 public class Validator {
     public static String getRequiredParameter(HttpServletRequest req, String parameter){
         String result = req.getParameter(parameter);
-        if(result == null || result.isEmpty()){
+        if(result == null || result.isBlank()){
             throw new ValidationException("Form field " + parameter + " missing !");
+        }
+        if(parameter.equals("sign") && result.length() > 3){
+            throw new ValidationException("Sign must be as follows: AAA (3 letters) !");
         }
         return result;
     }

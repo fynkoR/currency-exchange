@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 public class ExchangeService {
-    private static final int SCALE = 2;
+    private static final int SCALE = 10;
     private final JdbcExchangeRateRepository jdbcExchangeRateRepository;
 
     public ExchangeService() {
