@@ -12,17 +12,17 @@ import java.util.Optional;
 public class JdbcExchangeRateRepository implements ExchangeRateRepository{
     private static final String QUERY_FIND_ALL = "SELECT er.id AS id, " +
             "bc.id AS base_id, " +
-            "bc.fullName AS base_fullName, " +
+            "bc.name AS base_name, " +
             "bc.code AS base_code, " +
             "bc.sign AS base_sign, " +
             "tc.id AS target_id, " +
-            "tc.fullName AS target_fullName, " +
+            "tc.name AS target_name, " +
             "tc.code AS target_code, " +
             "tc.sign AS target_sign, " +
             "er.Rate AS rate " +
             "FROM ExchangeRates er " +
-            "JOIN Currencies bc ON er.BaseCurrencyId = bc.id " +
-            "JOIN Currencies tc ON er.TargetCurrencyId = tc.id ";
+            "JOIN Currencies bc ON er.baseCurrencyId = bc.id " +
+            "JOIN Currencies tc ON er.targetCurrencyId = tc.id ";
 
     private static final String QUERY_TWO_CODES = " WHERE bc.code = ? AND tc.code = ? ";
 
@@ -94,7 +94,7 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
 
     @Override
     public Long save(ExchangeRate entity) throws SQLException {
-        String query = "INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate) VALUES (?,?,?)";
+        String query = "INSERT INTO ExchangeRates (baseCurrencyId, targetCurrencyId, Rate) VALUES (?,?,?)";
 
         long id = 0L;
 
@@ -125,14 +125,14 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
         exchangeRate.setId(resultSet.getLong("id"));
 
         Currency base = new Currency(resultSet.getString("base_code"),
-                resultSet.getString("base_fullName"),
+                resultSet.getString("base_name"),
                 resultSet.getString("base_sign"));
         base.setId(resultSet.getLong("base_id"));
 
         exchangeRate.setBaseCurrency(base);
 
         Currency target = new Currency(resultSet.getString("target_code"),
-                resultSet.getString("target_fullName"),
+                resultSet.getString("target_name"),
                 resultSet.getString("target_sign"));
         target.setId(resultSet.getLong("target_id"));
 

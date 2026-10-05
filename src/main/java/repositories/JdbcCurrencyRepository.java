@@ -31,7 +31,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
 
     @Override
     public Optional<Currency> findByCode(String code) throws SQLException {
-        String query = "SELECT id, code, fullName, sign" +
+        String query = "SELECT id, code, name, sign" +
                 " FROM Currencies" +
                 " WHERE code = ?";
 
@@ -53,7 +53,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
 
     @Override
     public Long save(Currency entity) throws SQLException {
-        String query = "INSERT INTO Currencies (code,fullName,sign) VALUES (?,?,?)";
+        String query = "INSERT INTO Currencies (code,name,sign) VALUES (?,?,?)";
 
         long id = 0L;
 
@@ -61,7 +61,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, entity.getCode());
-            preparedStatement.setString(2, entity.getFullName());
+            preparedStatement.setString(2, entity.getName());
             preparedStatement.setString(3, entity.getSign());
 
             int affectedRow = preparedStatement.executeUpdate();
@@ -80,7 +80,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
 
     @Override
     public Optional<Currency> findById(long id) throws SQLException {
-        String query = "SELECT id,code,fullName,sign" +
+        String query = "SELECT id,code,name,sign" +
                 " FROM Currencies" +
                 " WHERE id = ?";
 
@@ -115,12 +115,12 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
         Currency currency = new Currency();
         long id = resultSet.getLong(1);
         String code = resultSet.getString(2);
-        String fullName = resultSet.getString(3);
+        String name = resultSet.getString(3);
         String sign = resultSet.getString(4);
 
         currency.setId(id);
         currency.setCode(code);
-        currency.setFullName(fullName);
+        currency.setName(name);
         currency.setSign(sign);
 
         return currency;

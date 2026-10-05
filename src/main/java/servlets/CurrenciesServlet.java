@@ -40,10 +40,10 @@ public class CurrenciesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         try {
             String code = Validator.getRequiredParameter(req, "code");
-            String fullName = Validator.getRequiredParameter(req, "fullName");
+            String name = Validator.getRequiredParameter(req, "name");
             String sign = Validator.getRequiredParameter(req, "sign");
 
-            Currency currency = new Currency(code, fullName, sign);
+            Currency currency = new Currency(code, name, sign);
             long id = jdbcCurrencyRepository.save(currency);
             currency.setId(id);
             resp.setStatus(HttpServletResponse.SC_CREATED);

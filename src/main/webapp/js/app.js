@@ -14,7 +14,7 @@ $(document).ready(function() {
                 $.each(data, function(index, currency) {
                     const row = $('<tr></tr>');
                     row.append($('<td></td>').text(currency.code));
-                    row.append($('<td></td>').text(currency.fullName));
+                    row.append($('<td></td>').text(currency.name));
                     row.append($('<td></td>').text(currency.sign));
                     tbody.append(row);
                 });
