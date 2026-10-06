@@ -1,5 +1,6 @@
 package repository;
 
+import exception.DatabaseException;
 import model.Currency;
 import model.ExchangeRate;
 import util.DatabaseManager;
@@ -27,7 +28,7 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
     private static final String QUERY_TWO_CODES = " WHERE bc.code = ? AND tc.code = ? ";
 
     @Override
-    public Optional<ExchangeRate> findByTwoCodes (String codeBase, String codeTarget) throws SQLException {
+    public Optional<ExchangeRate> findByTwoCodes (String codeBase, String codeTarget){
         String query = QUERY_FIND_ALL + QUERY_TWO_CODES;
 
         ExchangeRate exchangeRate = new ExchangeRate();
@@ -42,13 +43,15 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
             }
 
             exchangeRate = toEntity(resultSet);
+        } catch (SQLException e){
+            throw new DatabaseException("Failed to find by two codes exchange rate", e);
         }
 
         return Optional.of(exchangeRate);
     }
 
     @Override
-    public void update(ExchangeRate entity) throws SQLException {
+    public void update(ExchangeRate entity){
         String query = "UPDATE ExchangeRates SET Rate = ? WHERE id = ?";
 
         try(Connection connection = DatabaseManager.getConnection()){
@@ -61,17 +64,18 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
             if(affectedRow == 0){
                 throw new RuntimeException("No affected row !");
             }
-
+        } catch (SQLException e){
+            throw new DatabaseException("Failed update exchange rate", e);
         }
     }
 
     @Override
-    public Optional<ExchangeRate> findById(long id) throws SQLException {
+    public Optional<ExchangeRate> findById(long id){
         return Optional.empty();
     }
 
     @Override
-    public List<ExchangeRate> findAll() throws SQLException {
+    public List<ExchangeRate> findAll(){
         List<ExchangeRate> list = new ArrayList<>();
 
         try(Connection connection = DatabaseManager.getConnection()){
@@ -82,18 +86,20 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
                 ExchangeRate exchangeRate = toEntity(resultSet);
                 list.add(exchangeRate);
             }
+        }catch (SQLException e){
+            throw new DatabaseException("Failed find all exchange rates", e);
         }
         return list;
     }
 
 
     @Override
-    public void delete(ExchangeRate entity) throws SQLException {
+    public void delete(ExchangeRate entity){
 
     }
 
     @Override
-    public Long save(ExchangeRate entity) throws SQLException {
+    public Long save(ExchangeRate entity){
         String query = "INSERT INTO ExchangeRates (baseCurrencyId, targetCurrencyId, Rate) VALUES (?,?,?)";
 
         long id = 0L;
@@ -115,6 +121,8 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
             if(resultSet.next()){
                 id = resultSet.getLong(1);
             }
+        } catch (SQLException e){
+            throw new DatabaseException("Failed save exchange rate", e);
         }
 
         return id;

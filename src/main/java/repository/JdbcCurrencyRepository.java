@@ -1,6 +1,9 @@
 package repository;
 
+import exception.CurrencyAlreadyExistsException;
+import exception.DatabaseException;
 import model.Currency;
+import org.sqlite.SQLiteErrorCode;
 import util.DatabaseManager;
 
 import java.sql.*;
@@ -11,7 +14,7 @@ import java.util.Optional;
 public class JdbcCurrencyRepository implements CurrencyRepository {
 
     @Override
-    public List<Currency> findAll() throws SQLException {
+    public List<Currency> findAll(){
         String query = "SELECT * FROM Currencies";
 
         List<Currency> list = new ArrayList<>();
@@ -24,12 +27,16 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
                 Currency currency = toEntity(resultSet);
                 list.add(currency);
             }
+        } catch (SQLException e){
+            throw new DatabaseException("Failed to find all currencies", e);
         }
+
+
         return list;
     }
 
     @Override
-    public Optional<Currency> findByCode(String code) throws SQLException {
+    public Optional<Currency> findByCode(String code){
         String query = "SELECT id, code, name, sign" +
                 " FROM Currencies" +
                 " WHERE code = ?";
@@ -46,12 +53,14 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
             }
 
             currency = toEntity(resultSet);
+        } catch (SQLException e){
+            throw new DatabaseException("Failed to find by code currency !", e);
         }
         return Optional.of(currency);
     }
 
     @Override
-    public Long save(Currency entity) throws SQLException {
+    public Long save(Currency entity){
         String query = "INSERT INTO Currencies (code,name,sign) VALUES (?,?,?)";
 
         long id = 0L;
@@ -73,12 +82,19 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
             if(resultSet.next()){
                 id = resultSet.getLong(1);
             }
+        } catch (SQLException e){
+            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE.code){
+                throw new CurrencyAlreadyExistsException(entity.getCode());
+            }
+            else{
+                throw new DatabaseException("Failed to save currency", e);
+            }
         }
         return id;
     }
 
     @Override
-    public Optional<Currency> findById(long id) throws SQLException {
+    public Optional<Currency> findById(long id){
         String query = "SELECT id,code,name,sign" +
                 " FROM Currencies" +
                 " WHERE id = ?";
@@ -95,18 +111,20 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
 
             currency = toEntity(resultSet);
 
+        } catch (SQLException e){
+            throw new DatabaseException("Failed find by id currency", e);
         }
         return Optional.of(currency);
     }
 
     @Override
-    public void update(Currency entity) throws SQLException {
+    public void update(Currency entity){
 
     }
 
 
     @Override
-    public void delete(Currency entity) throws SQLException {
+    public void delete(Currency entity){
 
     }
 

@@ -35,56 +35,27 @@ public class ExchangeRateServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        try {
-            String[] codes = Validator.getRequiredPathTwoSegment(req);
-            ExchangeRate exchangeRate = jdbcExchangeRateRepository.findByTwoCodes(codes[0], codes[1])
-                    .orElseThrow(NoSuchElementException::new);
-            resp.setStatus(HttpServletResponse.SC_OK);
-            objectMapper.writeValue(resp.getWriter(), exchangeRate);
-
-        } catch (ValidationException e) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
-                    (HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
-                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
-        } catch (NoSuchElementException e){
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
-                    (HttpServletResponse.SC_NOT_FOUND, "Exchange rate for the pair not found"));
-        }
+        String[] codes = Validator.getRequiredPathTwoSegment(req);
+        ExchangeRate exchangeRate = jdbcExchangeRateRepository.findByTwoCodes(codes[0], codes[1])
+                .orElseThrow(() -> new NoSuchElementException("Exchange rate for the pair not found"));
+        resp.setStatus(HttpServletResponse.SC_OK);
+        objectMapper.writeValue(resp.getWriter(), exchangeRate);
     }
 
     protected void processPatch(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        try{
-            String[] codes = Validator.getRequiredPathTwoSegment(req);
-            ExchangeRate exchangeRate = jdbcExchangeRateRepository.findByTwoCodes(codes[0], codes[1])
-                    .orElseThrow(NoSuchElementException::new);
+        String[] codes = Validator.getRequiredPathTwoSegment(req);
+        ExchangeRate exchangeRate = jdbcExchangeRateRepository.findByTwoCodes(codes[0], codes[1])
+                .orElseThrow(() -> new NoSuchElementException("Exchange rate for the pair not found"));
 
-            String rateString = Validator.getRequiredParameterForPatch(req, "rate");
+        String rateString = Validator.getRequiredParameterForPatch(req, "rate");
 
-            BigDecimal rate = Validator.getPositiveDecimal(rateString, "rate");
+        BigDecimal rate = Validator.getPositiveDecimal(rateString, "rate");
 
-            exchangeRate.setRate(rate);
+        exchangeRate.setRate(rate);
 
-            jdbcExchangeRateRepository.update(exchangeRate);
+        jdbcExchangeRateRepository.update(exchangeRate);
 
-            resp.setStatus(HttpServletResponse.SC_OK);
-            objectMapper.writeValue(resp.getWriter(), exchangeRate);
-
-        } catch (ValidationException | NumberFormatException e){
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse(HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
-        } catch (SQLException e) {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
-                    (HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error! Database unavailable"));
-        } catch (NoSuchElementException e){
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            objectMapper.writeValue(resp.getWriter(), new ErrorResponse
-                    (HttpServletResponse.SC_NOT_FOUND, "Exchange rate for the pair not found"));
-        }
+        resp.setStatus(HttpServletResponse.SC_OK);
+        objectMapper.writeValue(resp.getWriter(), exchangeRate);
     }
 }

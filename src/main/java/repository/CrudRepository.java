@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CrudRepository<T> {
-    void update(T entity) throws SQLException;
+    void update(T entity);
 
-    Optional<T> findById(long id) throws SQLException;
+    Optional<T> findById(long id);
 
-    List<T> findAll() throws SQLException;
+    List<T> findAll();
 
-    void delete(T entity) throws SQLException;
+    void delete(T entity);
 
-    Long save (T entity) throws SQLException;
+    Long save (T entity);
 }

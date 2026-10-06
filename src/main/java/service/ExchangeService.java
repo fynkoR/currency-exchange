@@ -2,6 +2,7 @@ package service;
 
 import exception.ExchangeRateNotFoundException;
 import model.ExchangeRate;
+import repository.ExchangeRateRepository;
 import repository.JdbcExchangeRateRepository;
 
 import java.math.BigDecimal;
@@ -13,11 +14,11 @@ public class ExchangeService {
     private static final int SCALE = 10;
     private final JdbcExchangeRateRepository jdbcExchangeRateRepository;
 
-    public ExchangeService() {
-        jdbcExchangeRateRepository = new JdbcExchangeRateRepository();
+    public ExchangeService(JdbcExchangeRateRepository jdbcExchangeRateRepository) {
+        this.jdbcExchangeRateRepository = jdbcExchangeRateRepository;
     }
 
-    public BigDecimal getRate(String from, String to) throws SQLException {
+    public BigDecimal getRate(String from, String to){
         Optional<BigDecimal> rate = convertRate(from, to);
         if (!rate.isPresent()) {
             rate = inverseConvertRate(from, to);
@@ -33,7 +34,7 @@ public class ExchangeService {
         return rate.multiply(amount);
     }
 
-    public Optional<BigDecimal> convertRate(String from, String to) throws SQLException {
+    public Optional<BigDecimal> convertRate(String from, String to){
         Optional<ExchangeRate> exchangeRateFromTo = jdbcExchangeRateRepository.findByTwoCodes(from, to);
         if (exchangeRateFromTo.isPresent()) {
             BigDecimal rate = exchangeRateFromTo.get().getRate();
@@ -43,7 +44,7 @@ public class ExchangeService {
         return Optional.empty();
     }
 
-    public Optional<BigDecimal> inverseConvertRate(String from, String to) throws SQLException {
+    public Optional<BigDecimal> inverseConvertRate(String from, String to) {
         Optional<ExchangeRate> exchangeRateToFrom = jdbcExchangeRateRepository.findByTwoCodes(to, from);
         if (exchangeRateToFrom.isPresent()) {
             BigDecimal rate = exchangeRateToFrom.get().getRate();
@@ -53,7 +54,7 @@ public class ExchangeService {
         return Optional.empty();
     }
 
-    public Optional<BigDecimal> crossRate(String from, String to) throws SQLException {
+    public Optional<BigDecimal> crossRate(String from, String to) {
         Optional<ExchangeRate> exchangeRateUsdFrom = jdbcExchangeRateRepository.findByTwoCodes("USD", from);
         Optional<ExchangeRate> exchangeRateUsdTo = jdbcExchangeRateRepository.findByTwoCodes("USD", to);
         if (exchangeRateUsdFrom.isPresent() && exchangeRateUsdTo.isPresent()) {
