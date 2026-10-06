@@ -1,7 +1,6 @@
 package dto;
 
-import models.Currency;
-import models.ExchangeRate;
+import model.Currency;
 
 import java.math.BigDecimal;
 

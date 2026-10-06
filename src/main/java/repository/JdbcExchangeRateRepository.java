@@ -1,8 +1,8 @@
-package repositories;
+package repository;
 
-import models.Currency;
-import models.ExchangeRate;
-import utils.DatabaseManager;
+import model.Currency;
+import model.ExchangeRate;
+import util.DatabaseManager;
 
 import java.sql.*;
 import java.util.ArrayList;

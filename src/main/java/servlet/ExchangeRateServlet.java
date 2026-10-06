@@ -1,21 +1,20 @@
-package servlets;
+package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exceptions.ValidationException;
+import exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.ErrorResponse;
-import models.ExchangeRate;
-import repositories.JdbcExchangeRateRepository;
-import utils.Validator;
+import model.ErrorResponse;
+import model.ExchangeRate;
+import repository.JdbcExchangeRateRepository;
+import util.Validator;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.Map;
 import java.util.NoSuchElementException;
 
 @WebServlet("/exchangeRate/*")

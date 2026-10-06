@@ -1,6 +1,6 @@
-package utils;
+package util;
 
-import exceptions.ValidationException;
+import exception.ValidationException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.IOException;

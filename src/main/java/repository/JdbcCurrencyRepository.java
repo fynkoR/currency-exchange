@@ -1,9 +1,8 @@
-package repositories;
+package repository;
 
-import models.Currency;
-import utils.DatabaseManager;
+import model.Currency;
+import util.DatabaseManager;
 
-import java.io.PrintWriter;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

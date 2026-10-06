@@ -1,4 +1,4 @@
-package models;
+package model;
 
 public class ErrorResponse {
     private int code;

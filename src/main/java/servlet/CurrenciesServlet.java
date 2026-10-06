@@ -1,17 +1,17 @@
-package servlets;
+package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exceptions.ValidationException;
+import exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.Currency;
-import models.ErrorResponse;
+import model.Currency;
+import model.ErrorResponse;
 import org.sqlite.SQLiteErrorCode;
-import repositories.JdbcCurrencyRepository;
-import utils.Validator;
+import repository.JdbcCurrencyRepository;
+import util.Validator;
 
 import java.io.IOException;
 import java.sql.*;

@@ -1,10 +1,9 @@
-package services;
+package service;
 
-import exceptions.ExchangeRateNotFoundException;
-import models.ExchangeRate;
-import repositories.JdbcExchangeRateRepository;
+import exception.ExchangeRateNotFoundException;
+import model.ExchangeRate;
+import repository.JdbcExchangeRateRepository;
 
-import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;

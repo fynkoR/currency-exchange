@@ -1,4 +1,4 @@
-package utils;
+package util;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;

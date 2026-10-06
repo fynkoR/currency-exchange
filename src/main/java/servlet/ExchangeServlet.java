@@ -1,20 +1,20 @@
-package servlets;
+package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.ExchangeRateDTO;
-import exceptions.ExchangeRateNotFoundException;
-import exceptions.ValidationException;
+import exception.ExchangeRateNotFoundException;
+import exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import models.Currency;
-import models.ErrorResponse;
-import repositories.JdbcCurrencyRepository;
-import repositories.JdbcExchangeRateRepository;
-import services.ExchangeService;
-import utils.Validator;
+import model.Currency;
+import model.ErrorResponse;
+import repository.JdbcCurrencyRepository;
+import repository.JdbcExchangeRateRepository;
+import service.ExchangeService;
+import util.Validator;
 
 import java.io.IOException;
 import java.math.BigDecimal;

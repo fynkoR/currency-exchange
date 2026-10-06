@@ -1,6 +1,6 @@
-package repositories;
+package repository;
 
-import models.ExchangeRate;
+import model.ExchangeRate;
 
 import java.sql.SQLException;
 import java.util.Optional;

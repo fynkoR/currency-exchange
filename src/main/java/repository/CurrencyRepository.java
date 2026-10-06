@@ -1,6 +1,6 @@
-package repositories;
+package repository;
 
-import models.Currency;
+import model.Currency;
 
 import java.sql.SQLException;
 import java.util.Optional;
