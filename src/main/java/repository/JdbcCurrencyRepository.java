@@ -4,7 +4,7 @@ import exception.CurrencyAlreadyExistsException;
 import exception.DatabaseException;
 import model.Currency;
 import org.sqlite.SQLiteErrorCode;
-import util.DatabaseManager;
+import database.DatabaseManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -94,37 +94,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
     }
 
     @Override
-    public Optional<Currency> findById(long id){
-        String query = "SELECT id,code,name,sign" +
-                " FROM Currencies" +
-                " WHERE id = ?";
-
-        Currency currency = new Currency();
-        try(Connection connection = DatabaseManager.getConnection()){
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setLong(1, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if(!resultSet.next()){
-                return Optional.empty();
-            }
-
-            currency = toEntity(resultSet);
-
-        } catch (SQLException e){
-            throw new DatabaseException("Failed find by id currency", e);
-        }
-        return Optional.of(currency);
-    }
-
-    @Override
     public void update(Currency entity){
-
-    }
-
-
-    @Override
-    public void delete(Currency entity){
 
     }
 

@@ -1,12 +1,11 @@
 package repository;
 
-import exception.CurrencyAlreadyExistsException;
 import exception.DatabaseException;
 import exception.ExchangeRateAlreadyExistsException;
 import model.Currency;
 import model.ExchangeRate;
 import org.sqlite.SQLiteErrorCode;
-import util.DatabaseManager;
+import database.DatabaseManager;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -14,7 +13,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class JdbcExchangeRateRepository implements ExchangeRateRepository{
-    private static final String QUERY_FIND_ALL = "SELECT er.id AS id, " +
+    private static final String QUERY_FIND_ALL =
+            "SELECT er.id AS id, " +
             "bc.id AS base_id, " +
             "bc.name AS base_name, " +
             "bc.code AS base_code, " +
@@ -71,12 +71,6 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
             throw new DatabaseException("Failed update exchange rate", e);
         }
     }
-
-    @Override
-    public Optional<ExchangeRate> findById(long id){
-        return Optional.empty();
-    }
-
     @Override
     public List<ExchangeRate> findAll(){
         List<ExchangeRate> list = new ArrayList<>();
@@ -93,12 +87,6 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
             throw new DatabaseException("Failed find all exchange rates", e);
         }
         return list;
-    }
-
-
-    @Override
-    public void delete(ExchangeRate entity){
-
     }
 
     @Override

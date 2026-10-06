@@ -4,14 +4,14 @@ import model.Currency;
 
 import java.math.BigDecimal;
 
-public class ExchangeRateDTO{
+public class ExchangeRateDto {
     private Currency baseCurrency;
     private Currency targetCurrency;
     private BigDecimal rate;
     private BigDecimal amount;
     private BigDecimal convertedAmount;
 
-    public ExchangeRateDTO(Currency baseCurrency, Currency targetCurrency, BigDecimal rate,
+    public ExchangeRateDto(Currency baseCurrency, Currency targetCurrency, BigDecimal rate,
                            BigDecimal amount, BigDecimal convertedAmount) {
         this.baseCurrency = baseCurrency;
         this.targetCurrency = targetCurrency;

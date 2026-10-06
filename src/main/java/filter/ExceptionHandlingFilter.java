@@ -8,14 +8,11 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpFilter;
-import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.ErrorResponse;
-import org.sqlite.SQLiteErrorCode;
+import dto.ErrorResponse;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @WebFilter("/*")

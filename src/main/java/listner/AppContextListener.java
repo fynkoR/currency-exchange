@@ -1,8 +1,9 @@
-package util;
+package listner;
 
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import database.DatabaseManager;
 
 
 @WebListener

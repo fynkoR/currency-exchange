@@ -1,16 +1,13 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.ExchangeRateDTO;
-import exception.ExchangeRateNotFoundException;
-import exception.ValidationException;
+import dto.ExchangeRateDto;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
-import model.ErrorResponse;
 import repository.JdbcCurrencyRepository;
 import repository.JdbcExchangeRateRepository;
 import service.ExchangeService;
@@ -18,7 +15,6 @@ import util.Validator;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @WebServlet("/exchange")
@@ -46,7 +42,7 @@ public class ExchangeServlet extends HttpServlet {
 
         BigDecimal convertedRate = exchangeService.exchange(rate,amount);
 
-        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(currencyFrom, currencyTo, rate, amount, convertedRate);
+        ExchangeRateDto exchangeRateDTO = new ExchangeRateDto(currencyFrom, currencyTo, rate, amount, convertedRate);
 
         resp.setStatus(HttpServletResponse.SC_OK);
         objectMapper.writeValue(resp.getWriter(), exchangeRateDTO);

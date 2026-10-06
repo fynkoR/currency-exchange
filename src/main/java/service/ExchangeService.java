@@ -2,16 +2,16 @@ package service;
 
 import exception.ExchangeRateNotFoundException;
 import model.ExchangeRate;
-import repository.ExchangeRateRepository;
 import repository.JdbcExchangeRateRepository;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.SQLException;
 import java.util.Optional;
 
 public class ExchangeService {
-    private static final int SCALE = 10;
+    private static final int SCALE_DIVIDE = 6;
+    private static final int SCALE_MULTIPLY = 2;
+
     private final JdbcExchangeRateRepository jdbcExchangeRateRepository;
 
     public ExchangeService(JdbcExchangeRateRepository jdbcExchangeRateRepository) {
@@ -19,6 +19,9 @@ public class ExchangeService {
     }
 
     public BigDecimal getRate(String from, String to){
+
+
+
         Optional<BigDecimal> rate = convertRate(from, to);
         if (!rate.isPresent()) {
             rate = inverseConvertRate(from, to);
@@ -31,7 +34,7 @@ public class ExchangeService {
     }
 
     public BigDecimal exchange(BigDecimal rate, BigDecimal amount){
-        return rate.multiply(amount);
+        return rate.multiply(amount).setScale(SCALE_MULTIPLY, RoundingMode.HALF_UP);
     }
 
     public Optional<BigDecimal> convertRate(String from, String to){
@@ -48,7 +51,7 @@ public class ExchangeService {
         Optional<ExchangeRate> exchangeRateToFrom = jdbcExchangeRateRepository.findByTwoCodes(to, from);
         if (exchangeRateToFrom.isPresent()) {
             BigDecimal rate = exchangeRateToFrom.get().getRate();
-            return Optional.of(BigDecimal.ONE.divide(rate, SCALE, RoundingMode.HALF_UP));
+            return Optional.of(BigDecimal.ONE.divide(rate, SCALE_DIVIDE, RoundingMode.HALF_UP));
         }
 
         return Optional.empty();
@@ -61,7 +64,7 @@ public class ExchangeService {
             BigDecimal rateUsdFrom = exchangeRateUsdFrom.get().getRate();
             BigDecimal rateUsdTo = exchangeRateUsdTo.get().getRate();
 
-            return Optional.of(rateUsdTo.divide(rateUsdFrom, SCALE, RoundingMode.HALF_UP));
+            return Optional.of(rateUsdTo.divide(rateUsdFrom, SCALE_DIVIDE, RoundingMode.HALF_UP));
         }
         return Optional.empty();
     }

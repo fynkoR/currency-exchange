@@ -1,7 +1,8 @@
-package config;
+package database;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import exception.DatabaseException;
 import jakarta.servlet.ServletContext;
 
 import java.io.IOException;
@@ -10,14 +11,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-public class DatabaseManager {
+public final class DatabaseManager {
     private static HikariDataSource dataSource;
+
+    private DatabaseManager(){}
 
     static {
         try{
             Class.forName("org.sqlite.JDBC");
         }catch (ClassNotFoundException e){
-            e.getStackTrace();
+            throw new DatabaseException("SQLite JDBC Driver not found", e);
         }
     }
 

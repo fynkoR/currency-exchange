@@ -1,19 +1,16 @@
 package servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exception.ValidationException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
-import model.ErrorResponse;
 import repository.JdbcCurrencyRepository;
 import util.Validator;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.NoSuchElementException;
 
 @WebServlet("/currency/*")
