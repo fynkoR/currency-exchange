@@ -37,10 +37,10 @@ public class ExchangeServlet extends HttpServlet {
         BigDecimal amount = Validator.getPositiveDecimal(amountParameter, "amount");
 
         Currency currencyFrom = jdbcCurrencyRepository.findByCode(from)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Currency not found"));
 
         Currency currencyTo = jdbcCurrencyRepository.findByCode(to)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Currency not found"));
 
         BigDecimal rate = exchangeService.getRate(from,to);
 

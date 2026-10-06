@@ -83,7 +83,7 @@ public class JdbcCurrencyRepository implements CurrencyRepository {
                 id = resultSet.getLong(1);
             }
         } catch (SQLException e){
-            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT_UNIQUE.code){
+            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT.code){
                 throw new CurrencyAlreadyExistsException(entity.getCode());
             }
             else{

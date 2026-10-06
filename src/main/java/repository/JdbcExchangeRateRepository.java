@@ -1,8 +1,11 @@
 package repository;
 
+import exception.CurrencyAlreadyExistsException;
 import exception.DatabaseException;
+import exception.ExchangeRateAlreadyExistsException;
 import model.Currency;
 import model.ExchangeRate;
+import org.sqlite.SQLiteErrorCode;
 import util.DatabaseManager;
 
 import java.sql.*;
@@ -122,7 +125,12 @@ public class JdbcExchangeRateRepository implements ExchangeRateRepository{
                 id = resultSet.getLong(1);
             }
         } catch (SQLException e){
-            throw new DatabaseException("Failed save exchange rate", e);
+            if(e.getErrorCode() == SQLiteErrorCode.SQLITE_CONSTRAINT.code){
+                throw new ExchangeRateAlreadyExistsException(entity.getBaseCurrency().getCode(), entity.getTargetCurrency().getCode());
+            }
+            else{
+                throw new DatabaseException("Failed save exchange rate", e);
+            }
         }
 
         return id;

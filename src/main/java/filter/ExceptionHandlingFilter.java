@@ -1,10 +1,7 @@
 package filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import exception.CurrencyAlreadyExistsException;
-import exception.DatabaseException;
-import exception.ExchangeRateNotFoundException;
-import exception.ValidationException;
+import exception.*;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -40,7 +37,7 @@ public class ExceptionHandlingFilter extends HttpFilter {
             objectMapper.writeValue(resp.getWriter(), new ErrorResponse
                     (HttpServletResponse.SC_BAD_REQUEST, e.getMessage()));
 
-        } catch (CurrencyAlreadyExistsException e) {
+        } catch (CurrencyAlreadyExistsException | ExchangeRateAlreadyExistsException e) {
             resp.setStatus(HttpServletResponse.SC_CONFLICT);
             objectMapper.writeValue(resp.getWriter(), new ErrorResponse
                     (HttpServletResponse.SC_CONFLICT, e.getMessage()));

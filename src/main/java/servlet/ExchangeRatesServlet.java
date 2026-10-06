@@ -45,10 +45,10 @@ public class ExchangeRatesServlet extends HttpServlet {
         BigDecimal rate = Validator.getPositiveDecimal(rateString, "rate");
 
         Currency baseCurrency = jdbcCurrencyRepository.findByCode(baseCurrencyCode)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Currency not found"));
 
         Currency targetCurrency = jdbcCurrencyRepository.findByCode(targetCurrencyCode)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Currency not found"));
 
         ExchangeRate exchangeRate = new ExchangeRate(baseCurrency, targetCurrency, rate);
         long id = jdbcExchangeRateRepository.save(exchangeRate);
